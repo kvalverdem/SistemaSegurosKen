@@ -1,2 +1,2 @@
 # SistemaSegurosKen
-Sistema Seguros Prueva
+Sistema Seguros Prueba
