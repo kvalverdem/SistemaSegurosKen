@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [UsuarioSistemaSeg]
+    WITH PASSWORD = N'lVpotptexxuWjirbnsenpgcxmsFT7_&#$!~<1zIFwvf@:Efp' MUST_CHANGE, SID = 0x702DB68704E2CB4EA10CF11C226FA1E0, DEFAULT_DATABASE = [SistemaSeguros], DEFAULT_LANGUAGE = [us_english], CHECK_EXPIRATION = ON;
+

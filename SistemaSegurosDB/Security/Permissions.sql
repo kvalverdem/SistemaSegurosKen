@@ -1,0 +1,38 @@
+﻿GRANT VIEW ANY COLUMN ENCRYPTION KEY DEFINITION TO PUBLIC;
+
+
+GO
+GRANT VIEW ANY COLUMN MASTER KEY DEFINITION TO PUBLIC;
+
+
+GO
+GRANT CONNECT TO [UsuarioSistemaSeg];
+
+
+GO
+GRANT DELETE TO [UsuarioSistemaSeg];
+
+
+GO
+GRANT EXECUTE TO [UsuarioSistemaSeg];
+
+
+GO
+GRANT INSERT TO [UsuarioSistemaSeg];
+
+
+GO
+GRANT REFERENCES TO [UsuarioSistemaSeg];
+
+
+GO
+GRANT SELECT TO [UsuarioSistemaSeg];
+
+
+GO
+GRANT SHOWPLAN TO [UsuarioSistemaSeg];
+
+
+GO
+GRANT UPDATE TO [UsuarioSistemaSeg];
+
