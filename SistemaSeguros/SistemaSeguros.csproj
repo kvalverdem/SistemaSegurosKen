@@ -167,6 +167,10 @@
     </Compile>
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PolizaPorClientesController.cs" />
+    <Compile Include="EstadoPoliza.cs">
+      <DependentUpon>SistemaSegurosModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -334,8 +338,8 @@
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="SistemaSegurosModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>SistemaSegurosModel.Context.cs</LastGenOutput>
       <DependentUpon>SistemaSegurosModel.edmx</DependentUpon>
+      <LastGenOutput>SistemaSegurosModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="SistemaSegurosModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -356,13 +360,6 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <EntityDeploy Include="SistemaSegurosModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>SistemaSegurosModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="SistemaSegurosModel.edmx.diagram">
-      <DependentUpon>SistemaSegurosModel.edmx</DependentUpon>
-    </Content>
     <Content Include="Views\Clientes\Create.cshtml" />
     <Content Include="Views\Clientes\Delete.cshtml" />
     <Content Include="Views\Clientes\Details.cshtml" />
@@ -378,6 +375,18 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <EntityDeploy Include="SistemaSegurosModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SistemaSegurosModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="SistemaSegurosModel.edmx.diagram">
+      <DependentUpon>SistemaSegurosModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Views\PolizaPorClientes\Index.cshtml" />
+    <Content Include="Views\PolizaPorClientes\Create.cshtml" />
+    <Content Include="Views\PolizaPorClientes\Delete.cshtml" />
+    <Content Include="Views\PolizaPorClientes\Edit.cshtml" />
+    <Content Include="Views\PolizaPorClientes\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

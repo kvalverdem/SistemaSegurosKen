@@ -30,6 +30,7 @@ namespace SistemaSeguros
         public virtual DbSet<Cliente> Cliente { get; set; }
         public virtual DbSet<Cobertura> Cobertura { get; set; }
         public virtual DbSet<CoberturaPorPolizaCliente> CoberturaPorPolizaCliente { get; set; }
+        public virtual DbSet<EstadoPoliza> EstadoPoliza { get; set; }
         public virtual DbSet<Poliza> Poliza { get; set; }
         public virtual DbSet<PolizaPorCliente> PolizaPorCliente { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }

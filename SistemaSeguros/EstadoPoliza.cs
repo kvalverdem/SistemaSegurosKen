@@ -12,26 +12,18 @@ namespace SistemaSeguros
     using System;
     using System.Collections.Generic;
     
-    public partial class PolizaPorCliente
+    public partial class EstadoPoliza
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PolizaPorCliente()
+        public EstadoPoliza()
         {
-            this.CoberturaPorPolizaCliente = new HashSet<CoberturaPorPolizaCliente>();
+            this.PolizaPorCliente = new HashSet<PolizaPorCliente>();
         }
     
-        public int ID_PolizaCliente { get; set; }
-        public string FK_IDCliente { get; set; }
-        public int FK_IDPoliza { get; set; }
-        public System.DateTime InicioVigenciaPoliza { get; set; }
-        public double PrecioPolizaAdquirida { get; set; }
-        public int MesesCobertura { get; set; }
-        public int FK_IDEstado { get; set; }
+        public int Codigo { get; set; }
+        public string Descripcion { get; set; }
     
-        public virtual Cliente Cliente { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CoberturaPorPolizaCliente> CoberturaPorPolizaCliente { get; set; }
-        public virtual EstadoPoliza EstadoPoliza { get; set; }
-        public virtual Poliza Poliza { get; set; }
+        public virtual ICollection<PolizaPorCliente> PolizaPorCliente { get; set; }
     }
 }

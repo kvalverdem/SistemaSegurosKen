@@ -1,52 +1,57 @@
 ﻿@model IEnumerable<SistemaSeguros.Cliente>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Clientes";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+    <h2>
+      @ViewBag.Title
+    </h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Apellidos)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FechaNacimiento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Direccion)
-        </th>
-        <th></th>
-    </tr>
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellidos)
+            </th>
+            <th>
+                Fecha Nacimiento
+            </th>
+            <th>
+                Dirección
+            </th>
+            <th></th>
+        </tr>
+        </thead>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Apellidos)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaNacimiento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Direccion)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Identificacion }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Identificacion }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Identificacion })
-        </td>
-    </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Apellidos)
+                </td>
+                <td>
+                    @Convert.ToDateTime(item.FechaNacimiento).ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Direccion)
+                </td>
+                <td>
+                    @*@Html.ActionLink("Edit", "Edit", new { id = item.Identificacion }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Identificacion }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Identificacion })|*@
+                    @Html.ActionLink("Ver Pólizas", "Index","PolizaPorClientes", new { id = item.Identificacion, nombreCompleto = item.Nombre+" "+item.Apellidos }, null)
+                </td>
+            </tr>
+        }
 
 </table>
+
+<script>  </script>

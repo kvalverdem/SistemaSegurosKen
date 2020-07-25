@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SistemaSegurosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SistemaSegurosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Cliente">
           <Key>
             <PropertyRef Name="Identificacion" />
@@ -41,6 +41,13 @@
           <Property Name="FK_IDCobertura" Type="int" Nullable="false" />
           <Property Name="PorcentajeCobertura" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="EstadoPoliza">
+          <Key>
+            <PropertyRef Name="Codigo" />
+          </Key>
+          <Property Name="Codigo" Type="int" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Poliza">
           <Key>
             <PropertyRef Name="ID_Poliza" />
@@ -60,7 +67,7 @@
           <Property Name="InicioVigenciaPoliza" Type="datetime" Nullable="false" />
           <Property Name="PrecioPolizaAdquirida" Type="float" Nullable="false" />
           <Property Name="MesesCobertura" Type="int" Nullable="false" />
-          <Property Name="Estado" Type="int" Nullable="false" />
+          <Property Name="FK_IDEstado" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -151,6 +158,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PolizaPorCliente_EstadoPoliza">
+          <End Role="EstadoPoliza" Type="Self.EstadoPoliza" Multiplicity="1" />
+          <End Role="PolizaPorCliente" Type="Self.PolizaPorCliente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EstadoPoliza">
+              <PropertyRef Name="Codigo" />
+            </Principal>
+            <Dependent Role="PolizaPorCliente">
+              <PropertyRef Name="FK_IDEstado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PolizaPorCliente_Poliza">
           <End Role="Poliza" Type="Self.Poliza" Multiplicity="1" />
           <End Role="PolizaPorCliente" Type="Self.PolizaPorCliente" Multiplicity="*" />
@@ -199,6 +218,7 @@
           <EntitySet Name="Cobertura" EntityType="Self.Cobertura" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CoberturaPorPoliza" EntityType="Self.CoberturaPorPoliza" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CoberturaPorPolizaCliente" EntityType="Self.CoberturaPorPolizaCliente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EstadoPoliza" EntityType="Self.EstadoPoliza" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Poliza" EntityType="Self.Poliza" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PolizaPorCliente" EntityType="Self.PolizaPorCliente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
@@ -227,13 +247,16 @@
             <End Role="Cliente" EntitySet="Cliente" />
             <End Role="PolizaPorCliente" EntitySet="PolizaPorCliente" />
           </AssociationSet>
+          <AssociationSet Name="FK_PolizaPorCliente_EstadoPoliza" Association="Self.FK_PolizaPorCliente_EstadoPoliza">
+            <End Role="EstadoPoliza" EntitySet="EstadoPoliza" />
+            <End Role="PolizaPorCliente" EntitySet="PolizaPorCliente" />
+          </AssociationSet>
           <AssociationSet Name="FK_PolizaPorCliente_Poliza" Association="Self.FK_PolizaPorCliente_Poliza">
             <End Role="Poliza" EntitySet="Poliza" />
             <End Role="PolizaPorCliente" EntitySet="PolizaPorCliente" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SistemaSegurosModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -270,6 +293,14 @@
           <NavigationProperty Name="Cobertura" Relationship="Self.FK_CoberturaPorPolizaCliente_Cobertura" FromRole="CoberturaPorPolizaCliente" ToRole="Cobertura" />
           <NavigationProperty Name="PolizaPorCliente" Relationship="Self.FK_CoberturaPorPolizaCliente_PolizaPorCliente" FromRole="CoberturaPorPolizaCliente" ToRole="PolizaPorCliente" />
         </EntityType>
+        <EntityType Name="EstadoPoliza">
+          <Key>
+            <PropertyRef Name="Codigo" />
+          </Key>
+          <Property Name="Codigo" Type="Int32" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PolizaPorCliente" Relationship="Self.FK_PolizaPorCliente_EstadoPoliza" FromRole="EstadoPoliza" ToRole="PolizaPorCliente" />
+        </EntityType>
         <EntityType Name="Poliza">
           <Key>
             <PropertyRef Name="ID_Poliza" />
@@ -292,9 +323,10 @@
           <Property Name="InicioVigenciaPoliza" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="PrecioPolizaAdquirida" Type="Double" Nullable="false" />
           <Property Name="MesesCobertura" Type="Int32" Nullable="false" />
-          <Property Name="Estado" Type="Int32" Nullable="false" />
+          <Property Name="FK_IDEstado" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Cliente" Relationship="Self.FK_PolizaPorCliente_Cliente" FromRole="PolizaPorCliente" ToRole="Cliente" />
           <NavigationProperty Name="CoberturaPorPolizaCliente" Relationship="Self.FK_CoberturaPorPolizaCliente_PolizaPorCliente" FromRole="PolizaPorCliente" ToRole="CoberturaPorPolizaCliente" />
+          <NavigationProperty Name="EstadoPoliza" Relationship="Self.FK_PolizaPorCliente_EstadoPoliza" FromRole="PolizaPorCliente" ToRole="EstadoPoliza" />
           <NavigationProperty Name="Poliza" Relationship="Self.FK_PolizaPorCliente_Poliza" FromRole="PolizaPorCliente" ToRole="Poliza" />
         </EntityType>
         <EntityType Name="sysdiagrams">
@@ -351,6 +383,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PolizaPorCliente_EstadoPoliza">
+          <End Role="EstadoPoliza" Type="Self.EstadoPoliza" Multiplicity="1" />
+          <End Role="PolizaPorCliente" Type="Self.PolizaPorCliente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EstadoPoliza">
+              <PropertyRef Name="Codigo" />
+            </Principal>
+            <Dependent Role="PolizaPorCliente">
+              <PropertyRef Name="FK_IDEstado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Poliza_TipoRiesgo">
           <End Role="TipoRiesgo" Type="Self.TipoRiesgo" Multiplicity="1" />
           <End Role="Poliza" Type="Self.Poliza" Multiplicity="*" />
@@ -383,6 +427,7 @@
           <EntitySet Name="Cliente" EntityType="Self.Cliente" />
           <EntitySet Name="Cobertura" EntityType="Self.Cobertura" />
           <EntitySet Name="CoberturaPorPolizaCliente" EntityType="Self.CoberturaPorPolizaCliente" />
+          <EntitySet Name="EstadoPoliza" EntityType="Self.EstadoPoliza" />
           <EntitySet Name="Poliza" EntityType="Self.Poliza" />
           <EntitySet Name="PolizaPorCliente" EntityType="Self.PolizaPorCliente" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
@@ -398,6 +443,10 @@
           <AssociationSet Name="FK_CoberturaPorPolizaCliente_PolizaPorCliente" Association="Self.FK_CoberturaPorPolizaCliente_PolizaPorCliente">
             <End Role="PolizaPorCliente" EntitySet="PolizaPorCliente" />
             <End Role="CoberturaPorPolizaCliente" EntitySet="CoberturaPorPolizaCliente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PolizaPorCliente_EstadoPoliza" Association="Self.FK_PolizaPorCliente_EstadoPoliza">
+            <End Role="EstadoPoliza" EntitySet="EstadoPoliza" />
+            <End Role="PolizaPorCliente" EntitySet="PolizaPorCliente" />
           </AssociationSet>
           <AssociationSet Name="FK_Poliza_TipoRiesgo" Association="Self.FK_Poliza_TipoRiesgo">
             <End Role="TipoRiesgo" EntitySet="TipoRiesgo" />
@@ -489,6 +538,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="EstadoPoliza">
+            <EntityTypeMapping TypeName="SistemaSegurosModel.EstadoPoliza">
+              <MappingFragment StoreEntitySet="EstadoPoliza">
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Poliza">
             <EntityTypeMapping TypeName="SistemaSegurosModel.Poliza">
               <MappingFragment StoreEntitySet="Poliza">
@@ -508,7 +565,7 @@
                 <ScalarProperty Name="InicioVigenciaPoliza" ColumnName="InicioVigenciaPoliza" />
                 <ScalarProperty Name="PrecioPolizaAdquirida" ColumnName="PrecioPolizaAdquirida" />
                 <ScalarProperty Name="MesesCobertura" ColumnName="MesesCobertura" />
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="FK_IDEstado" ColumnName="FK_IDEstado" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
