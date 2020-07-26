@@ -31,6 +31,13 @@ namespace SistemaSeguros.Controllers
             //var CoberturasPorPoliza = db.Cobertura.Select(x=>x.Poliza.Where(y=>y.ID_Poliza == x.))
             return Ok(await CoberturasPorPoliza.ToListAsync());
         }
+        [HttpGet]
+        [Route("~/api/ObtenerTipoRiesgo/{idPoliza}")]
+        public async Task<IHttpActionResult> ObtenerTipoRiesgo(int idPoliza)
+        {
+            var CoberturasPorPoliza = db.Poliza.Where(poliza => poliza.ID_Poliza == idPoliza).Select(x => new { x.FK_TipoRiesgo });
+            return Ok(await CoberturasPorPoliza.ToListAsync());
+        }
         [HttpPost]
         [Route("~/api/AsignarCoberturasPorPoliza/")]
         public IHttpActionResult SetCoberturas([FromBody] List<CoberturaPorPolizaCliente> coberturas)

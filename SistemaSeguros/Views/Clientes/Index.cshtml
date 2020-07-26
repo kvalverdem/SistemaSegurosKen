@@ -53,7 +53,7 @@
         @*@Html.ActionLink("Edit", "Edit", new { id = item.Identificacion }) |
             @Html.ActionLink("Details", "Details", new { id = item.Identificacion }) |
             @Html.ActionLink("Delete", "Delete", new { id = item.Identificacion })|*@
-        @Html.ActionLink("Ver Pólizas", "Index", "PolizaPorClientes", new { id = item.Identificacion, nombreCompleto = item.Nombre + " " + item.Apellidos }, null)
+        @Html.ActionLink("Ver Pólizas", "Index", "PolizaPorClientes", new { idCliente = item.Identificacion, nombreCompleto = item.Nombre + " " + item.Apellidos }, null)
     </td>
 </tr>
         }

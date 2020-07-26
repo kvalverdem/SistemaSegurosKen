@@ -16,11 +16,11 @@ namespace SistemaSeguros.Controllers
         private SistemaSegurosEntities db = new SistemaSegurosEntities();
 
         // GET: PolizaPorClientes
-        public async Task<ActionResult> Index(string id, string nombreCompleto)
+        public async Task<ActionResult> Index(string idCliente, string nombreCompleto)
         {
-            ViewBag.idCliente = id;
+            ViewBag.idCliente = idCliente;
             ViewBag.NombreCompleto = nombreCompleto;
-            var polizaPorCliente = (!string.IsNullOrEmpty(id)) ? db.PolizaPorCliente.Include(p => p.Cliente).Include(p => p.Poliza).Where(c => c.FK_IDCliente == id) : db.PolizaPorCliente.Include(p => p.Cliente).Include(p => p.Poliza);
+            var polizaPorCliente = (!string.IsNullOrEmpty(idCliente)) ? db.PolizaPorCliente.Include(p => p.Cliente).Include(p => p.Poliza).Where(c => c.FK_IDCliente == idCliente) : db.PolizaPorCliente.Include(p => p.Cliente).Include(p => p.Poliza);
             return View(await polizaPorCliente.ToListAsync());
         }
 
@@ -40,10 +40,11 @@ namespace SistemaSeguros.Controllers
         }
 
         // GET: PolizaPorClientes/Create
-        public ActionResult Create(string id, string nombreCompleto)
+        public ActionResult Create(string idCliente, string nombreCompleto, string tipo)
         {
-            ViewBag.idCliente = id;
+            ViewBag.idCliente = idCliente;
             ViewBag.nombreCompleto = nombreCompleto;
+            ViewBag.tipo = tipo;
             ViewBag.FK_IDCliente = new SelectList(db.Cliente.Select(x => new { x.Identificacion, Nombre = (x.Identificacion+" - "+x.Nombre+" "+x.Apellidos) }), "Identificacion", "Nombre");
             ViewBag.FK_IDEstado = new SelectList(db.EstadoPoliza, "Codigo", "Descripcion");
             ViewBag.FK_IDPoliza = new SelectList(db.Poliza, "ID_Poliza", "Nombre");
@@ -73,12 +74,15 @@ namespace SistemaSeguros.Controllers
         }
 
         // GET: PolizaPorClientes/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int? id, string idCliente, string nombreCompleto, string tipo)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            ViewBag.idCliente = idCliente;
+            ViewBag.nombreCompleto = nombreCompleto;
+            ViewBag.tipo = tipo;
             PolizaPorCliente polizaPorCliente = await db.PolizaPorCliente.FindAsync(id);
             if (polizaPorCliente == null)
             {

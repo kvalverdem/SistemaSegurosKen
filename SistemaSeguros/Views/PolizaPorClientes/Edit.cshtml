@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
+<h2>Detalles Póliza de Cliente</h2>
 
 
 @using (Html.BeginForm())
@@ -13,13 +13,13 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>PolizaPorCliente</h4>
+        @*<h4>PolizaPorCliente</h4>*@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID_PolizaCliente)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.FK_IDCliente, "FK_IDCliente", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.FK_IDCliente, "Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("FK_IDCliente", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.FK_IDCliente, "", new { @class = "text-danger" })
@@ -27,7 +27,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.FK_IDPoliza, "FK_IDPoliza", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.FK_IDPoliza, "Tipo Póliza", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("FK_IDPoliza", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.FK_IDPoliza, "", new { @class = "text-danger" })
@@ -35,7 +35,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.InicioVigenciaPoliza, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.InicioVigenciaPoliza, "Inicio Vigencia Póliza", htmlAttributes: new { @style="max-width:50%;", @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.InicioVigenciaPoliza, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.InicioVigenciaPoliza, "", new { @class = "text-danger" })
@@ -43,7 +43,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PrecioPolizaAdquirida, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PrecioPolizaAdquirida, "Precio Póliza Adquirida", htmlAttributes: new { @style="max-width:50%;", @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.PrecioPolizaAdquirida, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.PrecioPolizaAdquirida, "", new { @class = "text-danger" })
@@ -51,7 +51,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.MesesCobertura, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MesesCobertura,"Meses Cobertura", htmlAttributes: new { @style="max-width:50%;", @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.MesesCobertura, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.MesesCobertura, "", new { @class = "text-danger" })
@@ -59,7 +59,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.FK_IDEstado, "FK_IDEstado", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.FK_IDEstado, "Estado", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("FK_IDEstado", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.FK_IDEstado, "", new { @class = "text-danger" })
@@ -75,7 +75,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Volver a lista", "Index",new { idCliente = ViewBag.idCliente, nombreCompleto=ViewBag.nombreCompleto  })
 </div>
 
 @section Scripts {

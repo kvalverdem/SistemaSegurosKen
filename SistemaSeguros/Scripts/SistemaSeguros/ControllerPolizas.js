@@ -9,6 +9,12 @@ SistemaSegurosApp.controller("SegurosController", function ($scope, $http) {
             // Second function handles error
            $scope.coberturas = [];
         });
+        $http.get($scope.url + 'ObtenerTipoRiesgo/' + $scope.PilizaID).then(function (response) {
+            $scope.CodigoTipoRiesgo = (response.data[0] == null) ? null : response.data[0].FK_TipoRiesgo;
+        }, function (response) {
+            // Second function handles error
+            $scope.CodigoTipoRiesgo = null;
+        });
     };
     $scope.crearPolizaCliente = function () {
         $scope.insertarObj = {
@@ -36,6 +42,10 @@ SistemaSegurosApp.controller("SegurosController", function ($scope, $http) {
             var uno = '';
         });
     };
+    angular.element(document).ready(function () {
+        $scope.data = '777777777';
+        
+    });
 
     
 });

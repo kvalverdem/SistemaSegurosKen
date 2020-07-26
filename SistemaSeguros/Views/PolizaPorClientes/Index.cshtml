@@ -8,7 +8,7 @@
     <h2>Pólizas de: @ViewBag.idCliente - @ViewBag.NombreCompleto</h2>
 
 <p>
-    @Html.ActionLink("Crear Póliza", "Create", new {id=ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto })
+    @Html.ActionLink("Crear Póliza", "Create", new {idCliente=ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo=1 })
 </p>
 <table class="table">
     <tr>
@@ -48,8 +48,7 @@
         @Html.DisplayFor(modelItem => item.EstadoPoliza.Descripcion)
     </td>
     <td>
-        @Html.ActionLink("Editar", "Edit", new { id = item.ID_PolizaCliente }) |
-        @Html.ActionLink("Eliminar", "Delete", new { id = item.ID_PolizaCliente })
+        @Html.ActionLink("Ver Detalles", "Edit", new { id=item.ID_PolizaCliente, idCliente=ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo=2 })
     </td>
 </tr>
 }
