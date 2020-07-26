@@ -5,60 +5,57 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <h2>@ViewBag.NombreCompleto</h2>
+    <h2>Pólizas de: @ViewBag.idCliente - @ViewBag.NombreCompleto</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Crear Póliza", "Create", new {id=ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto })
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.InicioVigenciaPoliza)
+            Nombre
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PrecioPolizaAdquirida)
+            Fecha Inicio Póliza
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.MesesCobertura)
+            Meses Cobertura
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Cliente.Nombre)
+            Precio
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Poliza.Nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EstadoPoliza.Descripcion)
+            Estado
         </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.InicioVigenciaPoliza)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PrecioPolizaAdquirida)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MesesCobertura)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Cliente.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Poliza.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EstadoPoliza.Descripcion)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID_PolizaCliente }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID_PolizaCliente }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID_PolizaCliente })
-        </td>
-    </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Poliza.Nombre)
+    </td>
+    <td>
+        @Convert.ToDateTime(item.InicioVigenciaPoliza).ToString("dd/MM/yyyy")
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.MesesCobertura)
+    </td>
+    <td>
+        @Convert.ToDouble(item.PrecioPolizaAdquirida).ToString("C2")
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.EstadoPoliza.Descripcion)
+    </td>
+    <td>
+        @Html.ActionLink("Editar", "Edit", new { id = item.ID_PolizaCliente }) |
+        @Html.ActionLink("Eliminar", "Delete", new { id = item.ID_PolizaCliente })
+    </td>
+</tr>
 }
 
 </table>
+
+<div>
+    @Html.ActionLink("Volver a Clientes", "Index", "Clientes")
+</div>

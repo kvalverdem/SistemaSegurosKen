@@ -13,6 +13,9 @@
     <thead class="thead-dark">
         <tr>
             <th>
+                Identificación
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
@@ -30,26 +33,29 @@
 
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Apellidos)
-                </td>
-                <td>
-                    @Convert.ToDateTime(item.FechaNacimiento).ToString("dd/MM/yyyy")
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Direccion)
-                </td>
-                <td>
-                    @*@Html.ActionLink("Edit", "Edit", new { id = item.Identificacion }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Identificacion }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Identificacion })|*@
-                    @Html.ActionLink("Ver Pólizas", "Index","PolizaPorClientes", new { id = item.Identificacion, nombreCompleto = item.Nombre+" "+item.Apellidos }, null)
-                </td>
-            </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Identificacion)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Nombre)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Apellidos)
+    </td>
+    <td>
+        @Convert.ToDateTime(item.FechaNacimiento).ToString("dd/MM/yyyy")
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Direccion)
+    </td>
+    <td>
+        @*@Html.ActionLink("Edit", "Edit", new { id = item.Identificacion }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Identificacion }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Identificacion })|*@
+        @Html.ActionLink("Ver Pólizas", "Index", "PolizaPorClientes", new { id = item.Identificacion, nombreCompleto = item.Nombre + " " + item.Apellidos }, null)
+    </td>
+</tr>
         }
 
 </table>

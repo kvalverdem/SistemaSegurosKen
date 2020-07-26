@@ -18,7 +18,8 @@ namespace SistemaSeguros.Controllers
         // GET: PolizaPorClientes
         public async Task<ActionResult> Index(string id, string nombreCompleto)
         {
-            ViewBag.NombreCompleto = (!string.IsNullOrEmpty(id)) ? "Pólizas de: " + id + " - " + nombreCompleto : "Pólizas";
+            ViewBag.idCliente = id;
+            ViewBag.NombreCompleto = nombreCompleto;
             var polizaPorCliente = (!string.IsNullOrEmpty(id)) ? db.PolizaPorCliente.Include(p => p.Cliente).Include(p => p.Poliza).Where(c => c.FK_IDCliente == id) : db.PolizaPorCliente.Include(p => p.Cliente).Include(p => p.Poliza);
             return View(await polizaPorCliente.ToListAsync());
         }
@@ -39,9 +40,11 @@ namespace SistemaSeguros.Controllers
         }
 
         // GET: PolizaPorClientes/Create
-        public ActionResult Create()
+        public ActionResult Create(string id, string nombreCompleto)
         {
-            ViewBag.FK_IDCliente = new SelectList(db.Cliente, "Identificacion", "Nombre");
+            ViewBag.idCliente = id;
+            ViewBag.nombreCompleto = nombreCompleto;
+            ViewBag.FK_IDCliente = new SelectList(db.Cliente.Select(x => new { x.Identificacion, Nombre = (x.Identificacion+" - "+x.Nombre+" "+x.Apellidos) }), "Identificacion", "Nombre");
             ViewBag.FK_IDEstado = new SelectList(db.EstadoPoliza, "Codigo", "Descripcion");
             ViewBag.FK_IDPoliza = new SelectList(db.Poliza, "ID_Poliza", "Nombre");
             return View();
@@ -52,19 +55,21 @@ namespace SistemaSeguros.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID_PolizaCliente,FK_IDCliente,FK_IDPoliza,InicioVigenciaPoliza,PrecioPolizaAdquirida,MesesCobertura,FK_IDEstado")] PolizaPorCliente polizaPorCliente)
+        public async Task<ActionResult> Create()
         {
-            if (ModelState.IsValid)
-            {
-                db.PolizaPorCliente.Add(polizaPorCliente);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
+            return RedirectToAction("Index");
 
-            ViewBag.FK_IDCliente = new SelectList(db.Cliente, "Identificacion", "Nombre", polizaPorCliente.FK_IDCliente);
-            ViewBag.FK_IDEstado = new SelectList(db.EstadoPoliza, "Codigo", "Descripcion", polizaPorCliente.FK_IDEstado);
-            ViewBag.FK_IDPoliza = new SelectList(db.Poliza, "ID_Poliza", "Nombre", polizaPorCliente.FK_IDPoliza);
-            return View(polizaPorCliente);
+            //if (ModelState.IsValid)
+            //{
+            //    db.PolizaPorCliente.Add(polizaPorCliente);
+            //    await db.SaveChangesAsync();
+                
+            //}
+
+            //ViewBag.FK_IDCliente = new SelectList(db.Cliente, "Identificacion", "Nombre", polizaPorCliente.FK_IDCliente);
+            //ViewBag.FK_IDEstado = new SelectList(db.EstadoPoliza, "Codigo", "Descripcion", polizaPorCliente.FK_IDEstado);
+            //ViewBag.FK_IDPoliza = new SelectList(db.Poliza, "ID_Poliza", "Nombre", polizaPorCliente.FK_IDPoliza);
+            //return View(polizaPorCliente);
         }
 
         // GET: PolizaPorClientes/Edit/5
