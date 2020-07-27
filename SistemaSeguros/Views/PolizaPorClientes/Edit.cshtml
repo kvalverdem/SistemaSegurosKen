@@ -12,66 +12,101 @@
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        @*<h4>PolizaPorCliente</h4>*@
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ID_PolizaCliente)
+<div class="form-horizontal" id="formEditar" ng-form="EditarForm" ng-controller="SegurosController">
+    @*<h4>PolizaPorCliente</h4>*@
+    <hr />
+    <input type="hidden" id="tipoOp" ng-model="tipoOp" value="@ViewBag.tipo" />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ID_PolizaCliente)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FK_IDCliente, "Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("FK_IDCliente", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.FK_IDCliente, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.FK_IDCliente, "Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("FK_IDCliente", null, "-Seleccione-", htmlAttributes: new { @class = "form-control", @disabled="true", ng_required = "true", ng_model = "IdClientes" })
+            @Html.ValidationMessageFor(model => model.FK_IDCliente, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FK_IDPoliza, "Tipo Póliza", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("FK_IDPoliza", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.FK_IDPoliza, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.FK_IDPoliza, "Tipo Póliza", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input type="hidden" ng-model="CodigoTipoRiesgo" id="CodigoTipoRiesgo" value="{{CodigoTipoRiesgo}}" />
+            @Html.DropDownList("FK_IDPoliza", null, "-Seleccione-", htmlAttributes: new { @class = "form-control", ng_required = "true", ng_model = "PilizaID", ng_change = "getCobPorPoliza()" })
+            @Html.ValidationMessageFor(model => model.FK_IDPoliza, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.InicioVigenciaPoliza, "Inicio Vigencia Póliza", htmlAttributes: new { @style="max-width:50%;", @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.InicioVigenciaPoliza, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InicioVigenciaPoliza, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.InicioVigenciaPoliza, "Inicio Vigencia Póliza", htmlAttributes: new { @style = "max-width:50%;", @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.InicioVigenciaPoliza, new { htmlAttributes = new { @class = "form-control", ng_required = "true", ng_model = "inicioVigencia", onchange = "validarFecha(this)", maxlength = "10" } })
+            @Html.ValidationMessageFor(model => model.InicioVigenciaPoliza, "", new { @class = "text-danger" })
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PrecioPolizaAdquirida, "Precio Póliza Adquirida", htmlAttributes: new { @style="max-width:50%;", @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PrecioPolizaAdquirida, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PrecioPolizaAdquirida, "", new { @class = "text-danger" })
-            </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.MesesCobertura, "Meses Cobertura", htmlAttributes: new { @style = "max-width:50%;", @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MesesCobertura, new { htmlAttributes = new { @class = "form-control", ng_required = "true", ng_model = "mesesCobertura", onchange = "sumALL();", maxlength = "3" } })
+            @Html.ValidationMessageFor(model => model.MesesCobertura, "", new { @class = "text-danger" })
         </div>
+    </div>
+     <div class="form-group">
+        <label class="control-label col-md-2">Coberturas</label>
+        <div class="col-md-10">
+            @*<select>
+                <option ng-repeat="cobertura in coberturas" value="{{cobertura.ID_Cobertura}}">{{cobertura.Nombre}}</option>
+            </select>*@
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th></th>
+                        <th ng-show="false"></th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio Mensual</th>
+                        <th>% Cobertura</th>
+                    </tr>
+                </thead>
+                <tr class="filaTablaSuma" ng-repeat="cobertura in coberturas" id="{{$index}}">
+                    <td><input id="CheckTable" onchange="setCampo(this);" ng-change="coberturas[$index].required = check" ng-model="check" type="checkbox"></td>
+                    <td ng-show="false">{{ cobertura.ID_Cobertura }}</td>
+                    <td>{{ cobertura.Nombre }}</td>
+                    <td>{{ cobertura.Descripcion }}</td>
+                    <td id="PorcentajeSumar">{{ cobertura.PrecioMensual }}</td>
+                    <td><input type="text" id="montoSumar" onchange="sumALL();" ng-required="coberturas[$index].required" ng-model="porce" ng-change="coberturas[$index].PorcentajeCobertura=porce" maxlength="3" min="1" max="100" readonly="true"></td>
+                </tr>
+            </table>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.MesesCobertura,"Meses Cobertura", htmlAttributes: new { @style="max-width:50%;", @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MesesCobertura, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MesesCobertura, "", new { @class = "text-danger" })
-            </div>
+            @*@Html.EditorFor(model => model.PrecioPolizaAdquirida, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PrecioPolizaAdquirida, "", new { @class = "text-danger" })*@
         </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.PrecioPolizaAdquirida, "Precio Póliza Adquirida", htmlAttributes: new { @style = "max-width:50%;", @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PrecioPolizaAdquirida, new { htmlAttributes = new { @class = "form-control", ng_required = "true", @disabled = "true", ng_model = "PrecioTotal" } })
+            @Html.ValidationMessageFor(model => model.PrecioPolizaAdquirida, "", new { @class = "text-danger" })
+        </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FK_IDEstado, "Estado", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("FK_IDEstado", null, htmlAttributes: new { @class = "form-control" })
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.FK_IDEstado, "Estado", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("FK_IDEstado", null, htmlAttributes: new { @class = "form-control"})
                 @Html.ValidationMessageFor(model => model.FK_IDEstado, "", new { @class = "text-danger" })
-            </div>
         </div>
+    </div>
 
+    <div class="form-group">
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input ng-model="botonFinal" ng-click="crearPoli.$invalid ? alert('Revise formulario, faltan datos') :editarPolizaCliente();" type="submit" value="Editar Póliza" class="btn-dark" />
             </div>
         </div>
     </div>
+</div>
 }
 
 <div>

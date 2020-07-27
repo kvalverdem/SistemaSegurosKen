@@ -45,7 +45,7 @@ namespace SistemaSeguros.Controllers
             ViewBag.idCliente = idCliente;
             ViewBag.nombreCompleto = nombreCompleto;
             ViewBag.tipo = tipo;
-            ViewBag.FK_IDCliente = new SelectList(db.Cliente.Select(x => new { x.Identificacion, Nombre = (x.Identificacion+" - "+x.Nombre+" "+x.Apellidos) }), "Identificacion", "Nombre");
+            ViewBag.FK_IDCliente = new SelectList(db.Cliente.Select(x => new { x.Identificacion, Nombre = (x.Identificacion+" - "+x.Nombre+" "+x.Apellidos) }), "Identificacion", "Nombre", idCliente);
             ViewBag.FK_IDEstado = new SelectList(db.EstadoPoliza, "Codigo", "Descripcion");
             ViewBag.FK_IDPoliza = new SelectList(db.Poliza, "ID_Poliza", "Nombre");
             return View();
@@ -88,7 +88,7 @@ namespace SistemaSeguros.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.FK_IDCliente = new SelectList(db.Cliente, "Identificacion", "Nombre", polizaPorCliente.FK_IDCliente);
+            ViewBag.FK_IDCliente = new SelectList(db.Cliente.Select(x => new { x.Identificacion, Nombre = (x.Identificacion + " - " + x.Nombre + " " + x.Apellidos) }), "Identificacion", "Nombre",polizaPorCliente.FK_IDCliente);
             ViewBag.FK_IDEstado = new SelectList(db.EstadoPoliza, "Codigo", "Descripcion", polizaPorCliente.FK_IDEstado);
             ViewBag.FK_IDPoliza = new SelectList(db.Poliza, "ID_Poliza", "Nombre", polizaPorCliente.FK_IDPoliza);
             return View(polizaPorCliente);

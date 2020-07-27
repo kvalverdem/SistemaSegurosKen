@@ -30,11 +30,19 @@ function setCampo(field) {
     sumALL();
    
     if (field.value == 'on') {
-        $(field).closest("tr").find("#montoSumar").removeAttr("readonly");
+        $(field).closest("tr").find("#montoSumar").removeAttr("disabled");
         $(field).closest("tr").find("#montoSumar").focus();
     }
     else {
-        $(field).closest("tr").find("#montoSumar").attr("readonly", "true");
+        $(field).closest("tr").find("#montoSumar").attr("disabled", "disabled");
         $(field).focus();
     }
+}
+function VerDetalle(button) {
+    //$("#editarDiv").css("display", "");
+    //$("#listaDiv").css("display", "none");
+    $("#ClienteNombre").val($("#nombreCliente").val()).change();
+    $("#ClienteID").val($("#idCliente").val()).change();
+    let valor = $(button).closest("tr").find("#idPolizaCliente").text();
+    $("#ID_PolizaCliente").val(valor).change();
 }

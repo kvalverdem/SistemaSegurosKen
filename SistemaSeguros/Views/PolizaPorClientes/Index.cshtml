@@ -4,57 +4,163 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+    <div ng-controller="SegurosController">
+        <div ng-show="aparecer" id="listaDiv">
+            <h2>Pólizas de: @ViewBag.idCliente - @ViewBag.NombreCompleto</h2>
+            <input id="idCliente" class="form-control" ng-show="false" disabled="disabled" value="@ViewBag.idCliente"/>
+            <input id="nombreCliente" class="form-control" ng-show="false" disabled="disabled" value="@ViewBag.idCliente - @ViewBag.NombreCompleto" />
 
-    <h2>Pólizas de: @ViewBag.idCliente - @ViewBag.NombreCompleto</h2>
+            <p>
+                @Html.ActionLink("Crear Póliza", "Create", new { idCliente = ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo = 1 })
+            </p>
+            <table class="table">
+                <tr>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Fecha Inicio Póliza
+                    </th>
+                    <th>
+                        Meses Cobertura
+                    </th>
+                    <th>
+                        Precio
+                    </th>
+                    <th>
+                        Estado
+                    </th>
+                    <th></th>
+                </tr>
 
-<p>
-    @Html.ActionLink("Crear Póliza", "Create", new {idCliente=ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo=1 })
-</p>
-<table class="table">
-    <tr>
-        <th>
-            Nombre
-        </th>
-        <th>
-            Fecha Inicio Póliza
-        </th>
-        <th>
-            Meses Cobertura
-        </th>
-        <th>
-            Precio
-        </th>
-        <th>
-            Estado
-        </th>
-        <th></th>
-    </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Poliza.Nombre)
+                        </td>
+                        <td>
+                            @Convert.ToDateTime(item.InicioVigenciaPoliza).ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MesesCobertura)
+                        </td>
+                        <td>
+                            @Convert.ToDouble(item.PrecioPolizaAdquirida).ToString("C2")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EstadoPoliza.Descripcion)
+                        </td>
+                        <td id="idPolizaCliente" ng-show="false">@item.ID_PolizaCliente</td>
+                        <td>
+                            <input type="button" ng-model="buttonID" onclick="VerDetalle(this);return false;" ng-click="aparecer=!aparecer;loadDetailsPolizaCliente()" value="Ver Detalle" />
+                            @*@Html.ActionLink("Ver Detalles", "Edit", new { id = item.ID_PolizaCliente, idCliente = ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo = 2 })*@
+                        </td>
+                    </tr>
+                }
 
-@foreach (var item in Model) {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Poliza.Nombre)
-    </td>
-    <td>
-        @Convert.ToDateTime(item.InicioVigenciaPoliza).ToString("dd/MM/yyyy")
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.MesesCobertura)
-    </td>
-    <td>
-        @Convert.ToDouble(item.PrecioPolizaAdquirida).ToString("C2")
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.EstadoPoliza.Descripcion)
-    </td>
-    <td>
-        @Html.ActionLink("Ver Detalles", "Edit", new { id=item.ID_PolizaCliente, idCliente=ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo=2 })
-    </td>
-</tr>
-}
+            </table>
+        </div>
+        <div id="editarDiv" ng-hide="aparecer">
+            <h2>Detalles Póliza de Cliente</h2>
+            <div class="form-horizontal" id="formEditar" ng-form="EditarForm">
+                <hr />
+                <input type="hidden" id="tipoOp" ng-model="tipoOp" value="@ViewBag.tipo" />
+                <input id="ID_PolizaCliente" ng-hide="true" ng-model="IDPolizaCliente" />
+                <div class="form-group">
+                    @Html.Label("", "Cliente", htmlAttributes: new { @style = "max-width:50%;", @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input id="ClienteID" class="form-control" disabled="disabled" ng-show="false" ng-required="true" ng-model="ClienteID" />
+                        <input id="ClienteNombre" class="form-control" disabled="disabled" ng-required="true" ng-model="ClienteNombre" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("", "Tipo Póliza", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="hidden" ng-model="CodigoTipoRiesgo" id="CodigoTipoRiesgo" value="{{CodigoTipoRiesgo}}" />
+                        <select id="FK_IDPoliza" class="form-control" ng-required="true" ng-model="PilizaID" ng-change="getCobPorPoliza()">
+                            <option value="">-Seleccione-</option>
+                            <option ng-repeat="x in tiposPolizas" ng-value="{{x.ID_Poliza}}">{{x.Nombre}}</option>
+                        </select>
+                    </div>
+                </div>
 
-</table>
+                <div class="form-group">
+                    @Html.Label("", "Inicio Vigencia Póliza", htmlAttributes: new { @style = "max-width:50%;", @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input id="InicioVigenciaPoliza" class="form-control" ng-required="true" ng-model="inicioVigencia" onchange="validarFecha(this)" maxlength="10" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("", "Meses Cobertura", htmlAttributes: new { @style = "max-width:50%;", @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input id="MesesCobertura" class="form-control" ng-required="true" ng-model="mesesCobertura" onchange="sumALL();" maxlength="3" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Coberturas</label>
+                    <div class="col-md-10">
+                        @*<select>
+                    <option ng-repeat="cobertura in coberturas" value="{{cobertura.ID_Cobertura}}">{{cobertura.Nombre}}</option>
+                </select>*@
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th></th>
+                                    <th ng-show="false"></th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Precio Mensual</th>
+                                    <th>% Cobertura</th>
+                                </tr>
+                            </thead>
+                            <tr class="filaTablaSuma" ng-repeat="cobertura in coberturas" id="{{$index}}">
+                                <td><input id="CheckTable" onchange="setCampo(this);" ng-change="coberturas[$index].required = check" ng-model="check" ng-checked="{{cobertura.Check}}" type="checkbox"></td>
+                                <td ng-show="false">{{ cobertura.ID_Cobertura }}</td>
+                                <td>{{ cobertura.Nombre }}</td>
+                                <td>{{ cobertura.Descripcion }}</td>
+                                <td id="PorcentajeSumar">{{ cobertura.PrecioMensual }}</td>
+                                <td><input type="text" value="{{ porce=cobertura.PorcentajeCobertura }}" id="montoSumar" onchange="sumALL();" ng-required="coberturas[$index].required" 
+                                           ng-model="porce" ng-change="coberturas[$index].PorcentajeCobertura=porce" maxlength="3" min="1" max="100" ng-disabled="{{cobertura.Check ? false : true}}"></td>
+                            </tr>
+                        </table>
 
+                        @*@Html.EditorFor(model => model.PrecioPolizaAdquirida, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PrecioPolizaAdquirida, "", new { @class = "text-danger" })*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("", "Precio Póliza Adquirida", htmlAttributes: new { @style = "max-width:50%;", @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input id="PrecioPolizaAdquirida" class="form-control" ng-required="true" disabled="true" ng-model="PrecioTotal" />
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    @Html.Label("", "Estado", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <select ng-model="FK_IDEstado" id="FK_IDEstado" class="form-control">
+                            <option value="">-Seleccione-</option>
+                            <option ng-repeat="x in EstadosPolizas" ng-value="{{x.Codigo}}">{{x.Descripcion}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+
+                                 
+                            <input ng-model="botonFinal" onclick="setTimeout(function () { location.href = '@Url.Action("Index",new { idCliente = ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo = 1 })';}, 300);" ng-click="formEditar.$invalid ? alert('Revise formulario, faltan datos') :editarPolizaCliente();" type="button" value="Editar Póliza" class="btn-dark" />
+                            <input ng-model="botonEliminar" onclick="if (confirm('Seguro de Borrar')) setTimeout(function () { location.href = '@Url.Action("Index",new { idCliente = ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo = 1 })' }, 300); else return false;" ng-click="formEditar.$invalid ? alert('Revise formulario, faltan datos') :editarPolizaCliente();" type="button" value="Eliminar Póliza" class="btn-dark" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <div>
     @Html.ActionLink("Volver a Clientes", "Index", "Clientes")
 </div>

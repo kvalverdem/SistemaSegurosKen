@@ -20,13 +20,13 @@
     <div class="form-group">
         @Html.LabelFor(model => model.FK_IDCliente, "Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("FK_IDCliente", null, "-Seleccione-", htmlAttributes: new { @class = "form-control", ng_required = "true", ng_model = "IdClientes", @value = ViewBag.idCliente })
+            @Html.DropDownList("FK_IDCliente", null, "-Seleccione-", htmlAttributes: new { @class = "form-control", ng_required = "true", ng_model = "IdClientes" })
             @Html.ValidationMessageFor(model => model.FK_IDCliente, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.FK_IDCliente, "Tipo Póliza", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.FK_IDPoliza, "Tipo Póliza", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             <input type="hidden" ng-model="CodigoTipoRiesgo" id="CodigoTipoRiesgo" value="{{CodigoTipoRiesgo}}" />
             @Html.DropDownList("FK_IDPoliza", null, "-Seleccione-", htmlAttributes: new { @class = "form-control", ng_required = "true", ng_model = "PilizaID", ng_change = "getCobPorPoliza()" })
@@ -70,7 +70,7 @@
                     <td>{{ cobertura.Nombre }}</td>
                     <td>{{ cobertura.Descripcion }}</td>
                     <td id="PorcentajeSumar">{{ cobertura.PrecioMensual }}</td>
-                    <td><input type="text" id="montoSumar" onchange="sumALL();" ng-required="coberturas[$index].required" ng-model="porce" ng-change="coberturas[$index].PorcentajeCobertura=porce" maxlength="3" min="1" max="100" readonly="true"></td>
+                    <td><input type="text" id="montoSumar" onchange="sumALL();" ng-required="coberturas[$index].required" ng-model="porce" ng-change="coberturas[$index].PorcentajeCobertura=porce" maxlength="3" min="1" max="100" disabled="disabled"></td>
                 </tr>
             </table>
 
@@ -82,7 +82,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PrecioPolizaAdquirida, "Precio Póliza", htmlAttributes: new { @style = "max-width:50%;", @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PrecioPolizaAdquirida, new { htmlAttributes = new { @class = "form-control", ng_required = "true", @readonly = "true", ng_model = "PrecioTotal" } })
+                @Html.EditorFor(model => model.PrecioPolizaAdquirida, new { htmlAttributes = new { @class = "form-control", ng_required = "true", @disabled = "true", ng_model = "PrecioTotal" } })
                 @Html.ValidationMessageFor(model => model.PrecioPolizaAdquirida, "", new { @class = "text-danger" })
             </div>
         </div>

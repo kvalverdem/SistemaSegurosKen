@@ -32,6 +32,45 @@ namespace SistemaSeguros.Controllers
             return Ok(await CoberturasPorPoliza.ToListAsync());
         }
         [HttpGet]
+        [Route("~/api/ObtenerTiposPolizas")]
+        public async Task<IHttpActionResult> ObtenerTiposPolizas()
+        {
+            var CoberturasPorPoliza = db.Poliza.Select(x => new { x.FK_TipoRiesgo, x.Nombre, x.ID_Poliza });
+            return Ok(await CoberturasPorPoliza.ToListAsync());
+        }
+        [HttpGet]
+        [Route("~/api/ObtenerEstadosPolizas")]
+        public async Task<IHttpActionResult> ObtenerEstadosPolizas()
+        {
+            var CoberturasPorPoliza = db.EstadoPoliza.Select(x => new { x.Codigo, x.Descripcion });
+            return Ok(await CoberturasPorPoliza.ToListAsync());
+        }
+        [HttpGet]
+        [Route("~/api/ObtenerDatosPolizaCliente/{idPoliza}")]
+        public async Task<IHttpActionResult> ObtenerDatosPolizaCliente(int idPoliza)
+        {
+            var CoberturasPorPoliza = db.PolizaPorCliente.Where(poliza => poliza.ID_PolizaCliente == idPoliza).Select(x => new { x.FK_IDEstado, x.FK_IDPoliza, x.InicioVigenciaPoliza, x.MesesCobertura, x.PrecioPolizaAdquirida });
+            return Ok(await CoberturasPorPoliza.ToListAsync());
+        }
+        [HttpGet]
+        [Route("~/api/ObtenerCoberturasPolizaCliente/{idPoliza}")]
+        public async Task<IHttpActionResult> ObtenerCoberturasPolizaCliente(int idPoliza)
+        {
+            var innerGroupJoinQuery =
+          (from cobCliente in db.CoberturaPorPolizaCliente
+           join cobertura in db.Cobertura on cobCliente.FK_IDCobertura equals cobertura.ID_Cobertura
+           select new
+           {
+               cobCliente.FK_IDPolizaPorCliente,
+               cobCliente.PorcentajeCobertura,
+               cobertura.Descripcion,
+               cobertura.ID_Cobertura,
+               cobertura.Nombre,
+               cobertura.PrecioMensual
+           }).Where(x => x.FK_IDPolizaPorCliente == idPoliza);
+           return Ok(await innerGroupJoinQuery.ToListAsync());
+        }
+        [HttpGet]
         [Route("~/api/ObtenerTipoRiesgo/{idPoliza}")]
         public async Task<IHttpActionResult> ObtenerTipoRiesgo(int idPoliza)
         {
@@ -44,12 +83,19 @@ namespace SistemaSeguros.Controllers
         {
             if (coberturas != null)
             {
-                int lastID = db.PolizaPorCliente.Max(x => x.ID_PolizaCliente);
-                coberturas.ForEach(x => x.FK_IDPolizaPorCliente = lastID);
+                if (coberturas != null && coberturas.Count > 0)
+                {
+                    int lastID = db.PolizaPorCliente.Max(x => x.ID_PolizaCliente);
+                    coberturas.ForEach(x => x.FK_IDPolizaPorCliente = lastID);
 
-                db.CoberturaPorPolizaCliente.ToList().RemoveAll(x => x.FK_IDPolizaPorCliente == lastID);
-                db.CoberturaPorPolizaCliente.AddRange(coberturas);
-                db.SaveChanges();
+                    var query = (from a in db.CoberturaPorPolizaCliente
+                                 where a.FK_IDPolizaPorCliente == lastID
+                                 select a);
+
+                    db.CoberturaPorPolizaCliente.RemoveRange(query);
+                    db.CoberturaPorPolizaCliente.AddRange(coberturas);
+                    db.SaveChanges();
+                }
             }
             
             return Ok();
@@ -64,6 +110,43 @@ namespace SistemaSeguros.Controllers
                 db.PolizaPorCliente.Add(poliza);
                 db.SaveChanges();
             }
+            return Ok();
+        }
+        [HttpPost]
+        [Route("~/api/EditarPolizaCliente/")]
+        public  IHttpActionResult EditarPolizaCliente([FromBody] PolizaPorCliente poliza)
+        {
+            var query = (from a in db.PolizaPorCliente
+                         where a.ID_PolizaCliente == poliza.ID_PolizaCliente
+                         select a).FirstOrDefault();
+
+            query.FK_IDCliente = poliza.FK_IDCliente;
+            query.FK_IDEstado = poliza.FK_IDEstado;
+            query.FK_IDPoliza = poliza.FK_IDPoliza;
+            query.InicioVigenciaPoliza = poliza.InicioVigenciaPoliza;
+            query.MesesCobertura = poliza.MesesCobertura;
+            query.PrecioPolizaAdquirida = poliza.PrecioPolizaAdquirida;
+
+            db.SaveChanges();
+
+            return Ok();
+        }
+        [HttpPost]
+        [Route("~/api/ActualizarCoberturasPoliza/")]
+        public IHttpActionResult ActualizarCoberturasPoliza([FromBody] List<CoberturaPorPolizaCliente> coberturas)
+        {
+            if (coberturas != null && coberturas.Count > 0)
+            {
+                int idPolCliente = coberturas.First().FK_IDPolizaPorCliente;
+                var query = (from a in db.CoberturaPorPolizaCliente
+                             where a.FK_IDPolizaPorCliente == idPolCliente
+                             select a);
+
+                db.CoberturaPorPolizaCliente.RemoveRange(query);
+                db.CoberturaPorPolizaCliente.AddRange(coberturas);
+                db.SaveChanges();
+            }
+
             return Ok();
         }
 
