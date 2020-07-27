@@ -6,7 +6,7 @@ SistemaSegurosApp.controller("SegurosController", function ($scope, $http) {
     $scope.getCobPorPoliza = function () {
         $scope.PrecioTotal = "";
         $http.get($scope.url + 'ObtenerCoberturasPorPoliza/' + $scope.PilizaID).then(function (response) {
-            $scope.coberturas = response.data.Cobertura;
+            $scope.coberturas = response.data;
         }, function (response) {
             // Second function handles error
            $scope.coberturas = [];
@@ -35,8 +35,12 @@ SistemaSegurosApp.controller("SegurosController", function ($scope, $http) {
             $scope.DatosPolizaCliente = response.data;
 
             $scope.PilizaID = $scope.DatosPolizaCliente[0].FK_IDPoliza;
-            $scope.inicioVigencia = $scope.DatosPolizaCliente[0].InicioVigenciaPoliza;
-            $scope.PrecioTotal = $scope.DatosPolizaCliente[0].PrecioPolizaAdquirida;
+            $scope.inicioVigencia = new Date($scope.DatosPolizaCliente[0].InicioVigenciaPoliza);
+            $scope.PrecioTotal = $scope.DatosPolizaCliente[0].PrecioPolizaAdquirida.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            });
+          
             $scope.mesesCobertura = $scope.DatosPolizaCliente[0].MesesCobertura;
             $scope.FK_IDEstado = $scope.DatosPolizaCliente[0].FK_IDEstado;
         }, function (response) {
@@ -59,7 +63,7 @@ SistemaSegurosApp.controller("SegurosController", function ($scope, $http) {
             FK_IDCliente: $scope.IdClientes,
             FK_IDPoliza: $scope.PilizaID,
             InicioVigenciaPoliza: $scope.inicioVigencia,
-            PrecioPolizaAdquirida: $scope.PrecioTotal,
+            PrecioPolizaAdquirida: $scope.PrecioTotal.replace(/[^0-9.]/g, ''),
             MesesCobertura: $scope.mesesCobertura,
             FK_IDEstado: 1
         };
@@ -88,7 +92,7 @@ SistemaSegurosApp.controller("SegurosController", function ($scope, $http) {
             FK_IDCliente: $scope.ClienteID,
             FK_IDPoliza: $scope.PilizaID,
             InicioVigenciaPoliza: $scope.inicioVigencia,
-            PrecioPolizaAdquirida: $scope.PrecioTotal,
+            PrecioPolizaAdquirida: $scope.PrecioTotal.replace(/[^0-9.]/g, ''),
             MesesCobertura: $scope.mesesCobertura,
             FK_IDEstado: $scope.FK_IDEstado
         };

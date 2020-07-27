@@ -27,9 +27,9 @@ namespace SistemaSeguros.Controllers
         [Route("~/api/ObtenerCoberturasPorPoliza/{idPoliza}")]
         public async Task<IHttpActionResult> GetCoberturas(int idPoliza)
         {
-            var CoberturasPorPoliza = db.Cobertura.Where(cobertura => cobertura.Poliza.All(Pol => Pol.ID_Poliza == idPoliza )).Select(x => new { x.ID_Cobertura, x.Nombre, x.Descripcion, x.PrecioMensual });
+            var CoberturasPorPoliza = db.Poliza.Where(Pol => Pol.ID_Poliza == idPoliza ).FirstOrDefault().Cobertura.Select(x => new { x.ID_Cobertura, x.Nombre, x.Descripcion, x.PrecioMensual });
             //var CoberturasPorPoliza = db.Cobertura.Select(x=>x.Poliza.Where(y=>y.ID_Poliza == x.))
-            return Ok(await CoberturasPorPoliza.ToListAsync());
+            return Ok(CoberturasPorPoliza.AsQueryable());
         }
         [HttpGet]
         [Route("~/api/ObtenerTiposPolizas")]

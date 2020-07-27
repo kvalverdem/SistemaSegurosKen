@@ -17,13 +17,18 @@
             fin = false;
             return false;
         }
-        total += (parseFloat($(this).find("#PorcentajeSumar").text()) * (isNaN(parseFloat($(this).find("#montoSumar").val()))?0:
+        total += (parseFloat($(this).find("#PorcentajeSumar").text().replace(/[^0-9.]/g,'')) * (isNaN(parseFloat($(this).find("#montoSumar").val()))?0:
             parseFloat($(this).find("#montoSumar").val())) / 100);
     });
     if (!fin)
         return false;
     let mesesCobertura = isNaN(parseFloat($("#MesesCobertura").val())) ? 0 : parseFloat($("#MesesCobertura").val());
-    $("#PrecioPolizaAdquirida").val(total * mesesCobertura).change();
+    mesesCobertura = total * mesesCobertura;
+    mesesCobertura = mesesCobertura.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+    $("#PrecioPolizaAdquirida").val(mesesCobertura).change();
 }
 function setCampo(field) {
     $(field).closest("tr").find("#montoSumar").val('');
@@ -53,4 +58,8 @@ function ValidarMontoSeguro() {
         return false;
     }
     return true;
+}
+
+function validarFecha(field) {
+    var uno = "";
 }

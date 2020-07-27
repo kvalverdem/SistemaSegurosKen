@@ -5,21 +5,21 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Tipos de Pólizas en Sistema</h2>
+<h2>Tipos de Pólizas</h2>
 
-<p>
+@*<p>
     @Html.ActionLink("Crear Nuevo Tipo", "Create")
-</p>
+</p>*@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Nombre)
+            Nombre
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Descripcion)
+            Descripción
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TipoRiesgo.Nombre)
+            Tipo Riesgo
         </th>
         <th></th>
     </tr>
@@ -36,9 +36,9 @@
             @Html.DisplayFor(modelItem => item.TipoRiesgo.Nombre)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID_Poliza }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID_Poliza }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID_Poliza })
+            @Html.ActionLink("Editar", "Edit", new { id=item.ID_Poliza })
+            @*@Html.ActionLink("Details", "Details", new { id=item.ID_Poliza }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID_Poliza })*@
         </td>
     </tr>
 }
