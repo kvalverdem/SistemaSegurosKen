@@ -6,7 +6,7 @@ SistemaSegurosApp.controller("SegurosController", function ($scope, $http) {
     $scope.getCobPorPoliza = function () {
         $scope.PrecioTotal = "";
         $http.get($scope.url + 'ObtenerCoberturasPorPoliza/' + $scope.PilizaID).then(function (response) {
-            $scope.coberturas = response.data;
+            $scope.coberturas = response.data.Cobertura;
         }, function (response) {
             // Second function handles error
            $scope.coberturas = [];
@@ -53,6 +53,8 @@ SistemaSegurosApp.controller("SegurosController", function ($scope, $http) {
         });
     };
     $scope.crearPolizaCliente = function () {
+        if ($scope.flagProcess == "false")
+            return;
         $scope.insertarObj = {
             FK_IDCliente: $scope.IdClientes,
             FK_IDPoliza: $scope.PilizaID,
@@ -79,6 +81,8 @@ SistemaSegurosApp.controller("SegurosController", function ($scope, $http) {
         });
     };
     $scope.editarPolizaCliente = function () {
+        if ($scope.flagProcess == "false")
+            return;
         $scope.insertarObj = {
             ID_PolizaCliente: $scope.IDPolizaCliente,
             FK_IDCliente: $scope.ClienteID,
@@ -105,5 +109,25 @@ SistemaSegurosApp.controller("SegurosController", function ($scope, $http) {
             // Second function handles error
             var uno = '';
             });
+    };
+    $scope.EliminarPolizaCliente = function () {
+        if ($scope.flagProcess == "false")
+            return;
+        $scope.insertarObj = {
+            ID_PolizaCliente: $scope.IDPolizaCliente,
+            FK_IDCliente: $scope.ClienteID,
+            FK_IDPoliza: $scope.PilizaID,
+            InicioVigenciaPoliza: $scope.inicioVigencia,
+            PrecioPolizaAdquirida: $scope.PrecioTotal,
+            MesesCobertura: $scope.mesesCobertura,
+            FK_IDEstado: $scope.FK_IDEstado
+        };
+
+        $http.post($scope.url + 'EliminarPolizaCliente', $scope.insertarObj).then(function (response) {
+            var uno = '';//$scope.coberturas = response.data;
+        }, function (response) {
+            // Second function handles error
+            var uno = '';
+        });
     };
 });

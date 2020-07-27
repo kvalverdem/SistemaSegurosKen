@@ -56,9 +56,9 @@ namespace SistemaSeguros.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create()
+        public async Task<ActionResult> Create(string idCliente, string nombreCompleto)
         {
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { idCliente = idCliente, nombreCompleto = nombreCompleto });
 
             //if (ModelState.IsValid)
             //{

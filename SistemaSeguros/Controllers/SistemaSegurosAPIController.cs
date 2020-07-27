@@ -149,6 +149,27 @@ namespace SistemaSeguros.Controllers
 
             return Ok();
         }
+        [HttpPost]
+        [Route("~/api/EliminarPolizaCliente/")]
+        public IHttpActionResult EliminarPolizaCliente([FromBody] PolizaPorCliente poliza)
+        {
+            if (poliza != null)
+            {
+                var query = (from a in db.CoberturaPorPolizaCliente
+                             where a.FK_IDPolizaPorCliente == poliza.ID_PolizaCliente
+                             select a);
+
+                db.CoberturaPorPolizaCliente.RemoveRange(query);
+
+                var query2 = (from a in db.PolizaPorCliente
+                             where a.ID_PolizaCliente == poliza.ID_PolizaCliente
+                             select a);
+                db.PolizaPorCliente.RemoveRange(query2);
+                db.SaveChanges();
+            }
+
+            return Ok();
+        }
 
         // GET: api/CoberturasAPI/5
         [ResponseType(typeof(Cobertura))]

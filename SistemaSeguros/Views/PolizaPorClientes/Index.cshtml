@@ -7,7 +7,7 @@
     <div ng-controller="SegurosController">
         <div ng-show="aparecer" id="listaDiv">
             <h2>Pólizas de: @ViewBag.idCliente - @ViewBag.NombreCompleto</h2>
-            <input id="idCliente" class="form-control" ng-show="false" disabled="disabled" value="@ViewBag.idCliente"/>
+            <input id="idCliente" class="form-control" ng-show="false" disabled="disabled" value="@ViewBag.idCliente" />
             <input id="nombreCliente" class="form-control" ng-show="false" disabled="disabled" value="@ViewBag.idCliente - @ViewBag.NombreCompleto" />
 
             <p>
@@ -60,6 +60,9 @@
                 }
 
             </table>
+            <div>
+                @Html.ActionLink("Volver a Clientes", "Index", "Clientes")
+            </div>
         </div>
         <div id="editarDiv" ng-hide="aparecer">
             <h2>Detalles Póliza de Cliente</h2>
@@ -106,7 +109,6 @@
                         <table class="table">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th></th>
                                     <th ng-show="false"></th>
                                     <th>Nombre</th>
                                     <th>Descripción</th>
@@ -115,13 +117,12 @@
                                 </tr>
                             </thead>
                             <tr class="filaTablaSuma" ng-repeat="cobertura in coberturas" id="{{$index}}">
-                                <td><input id="CheckTable" onchange="setCampo(this);" ng-change="coberturas[$index].required = check" ng-model="check" ng-checked="{{cobertura.Check}}" type="checkbox"></td>
                                 <td ng-show="false">{{ cobertura.ID_Cobertura }}</td>
                                 <td>{{ cobertura.Nombre }}</td>
                                 <td>{{ cobertura.Descripcion }}</td>
                                 <td id="PorcentajeSumar">{{ cobertura.PrecioMensual }}</td>
-                                <td><input type="text" value="{{ porce=cobertura.PorcentajeCobertura }}" id="montoSumar" onchange="sumALL();" ng-required="coberturas[$index].required" 
-                                           ng-model="porce" ng-change="coberturas[$index].PorcentajeCobertura=porce" maxlength="3" min="1" max="100" ng-disabled="{{cobertura.Check ? false : true}}"></td>
+                                <td><input type="text" value="{{ porce=cobertura.PorcentajeCobertura }}" id="montoSumar" onchange="sumALL();" 
+                                           ng-model="porce" ng-change="coberturas[$index].PorcentajeCobertura=porce" maxlength="3" min="1" max="100"></td>
                             </tr>
                         </table>
 
@@ -132,7 +133,7 @@
                 <div class="form-group">
                     @Html.Label("", "Precio Póliza Adquirida", htmlAttributes: new { @style = "max-width:50%;", @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input id="PrecioPolizaAdquirida" class="form-control" ng-required="true" disabled="true" ng-model="PrecioTotal" />
+                        <input id="PrecioPolizaAdquirida" class="form-control" ng-required="true" disabled="disabled" ng-model="PrecioTotal" />
                     </div>
                 </div>
 
@@ -151,16 +152,14 @@
                 <div class="form-group">
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-
-                                 
-                            <input ng-model="botonFinal" onclick="setTimeout(function () { location.href = '@Url.Action("Index",new { idCliente = ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo = 1 })';}, 300);" ng-click="formEditar.$invalid ? alert('Revise formulario, faltan datos') :editarPolizaCliente();" type="button" value="Editar Póliza" class="btn-dark" />
-                            <input ng-model="botonEliminar" onclick="if (confirm('Seguro de Borrar')) setTimeout(function () { location.href = '@Url.Action("Index",new { idCliente = ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo = 1 })' }, 300); else return false;" ng-click="formEditar.$invalid ? alert('Revise formulario, faltan datos') :editarPolizaCliente();" type="button" value="Eliminar Póliza" class="btn-dark" />
+                            <input id="flagProcess" ng-model="flagProcess" style="display:none">
+                            <input ng-model="botonFinal" onclick="$('#flagProcess').val('true').change(); if (ValidarMontoSeguro()) setTimeout(function () { location.href = '@Url.Action("Index",new { idCliente = ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo = 1 })'; }, 700); else { $('#flagProcess').val('false').change(); return false; }" ng-click="formEditar.$invalid ? alert('Revise formulario, faltan datos') :editarPolizaCliente();" type="button" value="Editar Póliza" class="btn-dark" />
+                            <input ng-model="botonCancelar" onclick="$('#flagProcess').val('false').change(); setTimeout(function () { location.href = '@Url.Action("Index",new { idCliente = ViewBag.idCliente, nombreCompleto = ViewBag.nombreCompleto, tipo = 1 })' }, 300); return false;" type="button" value="Regresar" class="btn-dark" />
+                            <input ng-model="botonEliminar" onclick="$('#flagProcess').val('true').change(); if (confirm('Seguro de Borrar')) setTimeout(function () { location.href = '@Url.Action("Index",new { idCliente=ViewBag.idCliente, nombreCompleto=ViewBag.nombreCompleto, tipo=1 })' }, 700); else { $('#flagProcess').val('false').change(); return false; }" ng-click="formEditar.$invalid ? alert('Revise formulario, faltan datos') :EliminarPolizaCliente();" type="button" value="Eliminar Póliza" class="btn-dark" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<div>
-    @Html.ActionLink("Volver a Clientes", "Index", "Clientes")
-</div>
+

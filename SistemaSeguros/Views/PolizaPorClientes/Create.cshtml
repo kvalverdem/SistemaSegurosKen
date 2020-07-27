@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Crear Póliza para Cliente</h2>
+    <h2>Crear Póliza para: @ViewBag.idCliente - @ViewBag.NombreCompleto</h2>
 
 
 @using (Html.BeginForm())
@@ -17,10 +17,11 @@
         <hr />
         <input type="hidden" id="tipoOp" ng-model="tipoOp" value="@ViewBag.tipo" />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
+    <div class="form-group" ng-show="false">
         @Html.LabelFor(model => model.FK_IDCliente, "Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("FK_IDCliente", null, "-Seleccione-", htmlAttributes: new { @class = "form-control", ng_required = "true", ng_model = "IdClientes" })
+            <input type="text" id="FK_IDCliente" value="@ViewBag.idCliente" ng-show="false" ng-model = "IdClientes" />
+            @*@Html.DropDownList("FK_IDCliente", null, "-Seleccione-", htmlAttributes: new { @class = "form-control", ng_required = "true", ng_model = "IdClientes" })*@
             @Html.ValidationMessageFor(model => model.FK_IDCliente, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -56,7 +57,6 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th></th>
                         <th ng-show="false"></th>
                         <th>Nombre</th>
                         <th>Descripción</th>
@@ -65,12 +65,11 @@
                     </tr>
                 </thead>
                 <tr class="filaTablaSuma" ng-repeat="cobertura in coberturas" id="{{$index}}">
-                    <td><input id="CheckTable" onchange="setCampo(this);" ng-change="coberturas[$index].required = check" ng-model="check" type="checkbox"></td>
                     <td ng-show="false">{{ cobertura.ID_Cobertura }}</td>
                     <td>{{ cobertura.Nombre }}</td>
                     <td>{{ cobertura.Descripcion }}</td>
                     <td id="PorcentajeSumar">{{ cobertura.PrecioMensual }}</td>
-                    <td><input type="text" id="montoSumar" onchange="sumALL();" ng-required="coberturas[$index].required" ng-model="porce" ng-change="coberturas[$index].PorcentajeCobertura=porce" maxlength="3" min="1" max="100" disabled="disabled"></td>
+                    <td><input type="text" id="montoSumar" onchange="sumALL();" ng-model="porce" ng-change="coberturas[$index].PorcentajeCobertura=porce" maxlength="3" min="1" max="100"></td>
                 </tr>
             </table>
 
@@ -97,7 +96,8 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input ng-model="botonFinal" ng-click="crearPoli.$invalid ? alert('Revise formulario, faltan datos') :crearPolizaCliente();" type="submit" value="Crear Póliza" class="btn-dark" />
+                <input id="flagProcess" ng-model="flagProcess" style="display:none">
+                <input ng-model="botonFinal" onclick="$('#FK_IDCliente').val('@ViewBag.idCliente').change();$('#flagProcess').val('true').change();if (!ValidarMontoSeguro()) { $('#flagProcess').val('false').change(); return false; }" ng-click="crearPoli.$invalid ? alert('Revise formulario, faltan datos') :crearPolizaCliente()" type="submit" value="Crear Póliza" class="btn-dark" />
             </div>
         </div>
     </div>

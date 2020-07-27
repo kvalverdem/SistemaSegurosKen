@@ -10,7 +10,7 @@
             fin = false;
             return false;
         }
-        else if ($("#CodigoTipoRiesgo").val() == "2" && porc > 50) {
+        else if ($("#CodigoTipoRiesgo").val() == "4" && porc > 50) {
             alert("Póliza de alto riesgo, cobertura debe ser menor al 50%");
             $(this).find("#montoSumar").focus();
             $(this).find("#montoSumar").val('');
@@ -45,4 +45,12 @@ function VerDetalle(button) {
     $("#ClienteID").val($("#idCliente").val()).change();
     let valor = $(button).closest("tr").find("#idPolizaCliente").text();
     $("#ID_PolizaCliente").val(valor).change();
+}
+
+function ValidarMontoSeguro() {
+    if (parseFloat($("#PrecioPolizaAdquirida").val()) == 0) {
+        alert ("Precio Total debe ser mayor a cero")
+        return false;
+    }
+    return true;
 }
