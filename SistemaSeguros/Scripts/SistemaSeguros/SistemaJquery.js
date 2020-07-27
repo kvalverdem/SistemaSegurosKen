@@ -10,8 +10,8 @@
             fin = false;
             return false;
         }
-        else if ($("#CodigoTipoRiesgo").val() == "4" && porc >= 50) {//Verificación de Alto Riesgo
-            alert("Póliza de alto riesgo, cobertura debe ser menor al 50%");
+        else if ($("#CodigoTipoRiesgo").val() == "4" && porc > 50) {//Verificación de Alto Riesgo
+            alert("Póliza de alto riesgo, cobertura no debe ser superior al 50%");
             $(this).find("#montoSumar").focus();
             $(this).find("#montoSumar").val('');
             fin = false;
