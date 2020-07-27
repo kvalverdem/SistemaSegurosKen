@@ -78,7 +78,7 @@ namespace SistemaSeguros.Controllers
             return Ok(await CoberturasPorPoliza.ToListAsync());
         }
         [HttpPost]
-        [Route("~/api/AsignarCoberturasPorPoliza/")]
+        [Route("~/api/AsignarCoberturasPorPoliza")]
         public IHttpActionResult SetCoberturas([FromBody] List<CoberturaPorPolizaCliente> coberturas)
         {
             if (coberturas != null)
@@ -102,7 +102,7 @@ namespace SistemaSeguros.Controllers
         }
 
         [HttpPost]
-        [Route("~/api/CrearNuevaPoliza/")]
+        [Route("~/api/CrearNuevaPoliza")]
         public IHttpActionResult CrearNuevaPoliza([FromBody] PolizaPorCliente poliza)
         {
             if (poliza != null)

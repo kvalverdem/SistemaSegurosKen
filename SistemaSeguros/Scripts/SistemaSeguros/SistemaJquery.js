@@ -10,14 +10,14 @@
             fin = false;
             return false;
         }
-        else if ($("#CodigoTipoRiesgo").val() == "4" && porc > 50) {
+        else if ($("#CodigoTipoRiesgo").val() == "4" && porc >= 50) {//Verificación de Alto Riesgo
             alert("Póliza de alto riesgo, cobertura debe ser menor al 50%");
             $(this).find("#montoSumar").focus();
             $(this).find("#montoSumar").val('');
             fin = false;
             return false;
         }
-        total += (parseFloat($(this).find("#PorcentajeSumar").text().replace(/[^0-9.]/g,'')) * (isNaN(parseFloat($(this).find("#montoSumar").val()))?0:
+        total += (parseFloat($(this).find("#PorcentajeSumar").text().replace(/[^0-9.-]/g,'')) * (isNaN(parseFloat($(this).find("#montoSumar").val()))?0:
             parseFloat($(this).find("#montoSumar").val())) / 100);
     });
     if (!fin)
@@ -53,13 +53,12 @@ function VerDetalle(button) {
 }
 
 function ValidarMontoSeguro() {
-    if (parseFloat($("#PrecioPolizaAdquirida").val()) == 0) {
-        alert ("Precio Total debe ser mayor a cero")
+    var monto = parseFloat($("#PrecioPolizaAdquirida").val().replace(/[^0-9.-]/g, ''));
+    if (isNaN(monto))
+        monto = 0;
+    if (monto <= 0) {
+        alert ("Precio Póliza debe ser mayor a cero")
         return false;
     }
     return true;
-}
-
-function validarFecha(field) {
-    var uno = "";
 }
