@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SistemaSegurosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Cliente">
+    <Key>
+      <PropertyRef Name="Identificacion" />
+    </Key>
+    <Property Name="Identificacion" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Apellidos" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="FechaNacimiento" Type="datetime" Nullable="false" />
+    <Property Name="Direccion" Type="varchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Cobertura">
+    <Key>
+      <PropertyRef Name="ID_Cobertura" />
+    </Key>
+    <Property Name="ID_Cobertura" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Descripcion" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="PrecioMensual" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CoberturaPorPoliza">
+    <Key>
+      <PropertyRef Name="FK_Poliza" />
+      <PropertyRef Name="FK_Cobertura" />
+    </Key>
+    <Property Name="FK_Poliza" Type="int" Nullable="false" />
+    <Property Name="FK_Cobertura" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CoberturaPorPolizaCliente">
+    <Key>
+      <PropertyRef Name="FK_IDPolizaPorCliente" />
+      <PropertyRef Name="FK_IDCobertura" />
+    </Key>
+    <Property Name="FK_IDPolizaPorCliente" Type="int" Nullable="false" />
+    <Property Name="FK_IDCobertura" Type="int" Nullable="false" />
+    <Property Name="PorcentajeCobertura" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EstadoPoliza">
+    <Key>
+      <PropertyRef Name="Codigo" />
+    </Key>
+    <Property Name="Codigo" Type="int" Nullable="false" />
+    <Property Name="Descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Poliza">
+    <Key>
+      <PropertyRef Name="ID_Poliza" />
+    </Key>
+    <Property Name="ID_Poliza" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Descripcion" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="FK_TipoRiesgo" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PolizaPorCliente">
+    <Key>
+      <PropertyRef Name="ID_PolizaCliente" />
+    </Key>
+    <Property Name="ID_PolizaCliente" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FK_IDCliente" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="FK_IDPoliza" Type="int" Nullable="false" />
+    <Property Name="InicioVigenciaPoliza" Type="datetime" Nullable="false" />
+    <Property Name="PrecioPolizaAdquirida" Type="float" Nullable="false" />
+    <Property Name="MesesCobertura" Type="int" Nullable="false" />
+    <Property Name="FK_IDEstado" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="TipoRiesgo">
+    <Key>
+      <PropertyRef Name="ID_Riesgo" />
+    </Key>
+    <Property Name="ID_Riesgo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_CoberturaPorPoliza_Cobertura">
+    <End Role="Cobertura" Type="Self.Cobertura" Multiplicity="1" />
+    <End Role="CoberturaPorPoliza" Type="Self.CoberturaPorPoliza" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cobertura">
+        <PropertyRef Name="ID_Cobertura" />
+      </Principal>
+      <Dependent Role="CoberturaPorPoliza">
+        <PropertyRef Name="FK_Cobertura" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CoberturaPorPoliza_Poliza">
+    <End Role="Poliza" Type="Self.Poliza" Multiplicity="1" />
+    <End Role="CoberturaPorPoliza" Type="Self.CoberturaPorPoliza" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Poliza">
+        <PropertyRef Name="ID_Poliza" />
+      </Principal>
+      <Dependent Role="CoberturaPorPoliza">
+        <PropertyRef Name="FK_Poliza" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CoberturaPorPolizaCliente_Cobertura">
+    <End Role="Cobertura" Type="Self.Cobertura" Multiplicity="1" />
+    <End Role="CoberturaPorPolizaCliente" Type="Self.CoberturaPorPolizaCliente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cobertura">
+        <PropertyRef Name="ID_Cobertura" />
+      </Principal>
+      <Dependent Role="CoberturaPorPolizaCliente">
+        <PropertyRef Name="FK_IDCobertura" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CoberturaPorPolizaCliente_PolizaPorCliente">
+    <End Role="PolizaPorCliente" Type="Self.PolizaPorCliente" Multiplicity="1" />
+    <End Role="CoberturaPorPolizaCliente" Type="Self.CoberturaPorPolizaCliente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PolizaPorCliente">
+        <PropertyRef Name="ID_PolizaCliente" />
+      </Principal>
+      <Dependent Role="CoberturaPorPolizaCliente">
+        <PropertyRef Name="FK_IDPolizaPorCliente" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Poliza_TipoRiesgo">
+    <End Role="TipoRiesgo" Type="Self.TipoRiesgo" Multiplicity="1" />
+    <End Role="Poliza" Type="Self.Poliza" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TipoRiesgo">
+        <PropertyRef Name="ID_Riesgo" />
+      </Principal>
+      <Dependent Role="Poliza">
+        <PropertyRef Name="FK_TipoRiesgo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PolizaPorCliente_Cliente">
+    <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
+    <End Role="PolizaPorCliente" Type="Self.PolizaPorCliente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cliente">
+        <PropertyRef Name="Identificacion" />
+      </Principal>
+      <Dependent Role="PolizaPorCliente">
+        <PropertyRef Name="FK_IDCliente" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PolizaPorCliente_EstadoPoliza">
+    <End Role="EstadoPoliza" Type="Self.EstadoPoliza" Multiplicity="1" />
+    <End Role="PolizaPorCliente" Type="Self.PolizaPorCliente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EstadoPoliza">
+        <PropertyRef Name="Codigo" />
+      </Principal>
+      <Dependent Role="PolizaPorCliente">
+        <PropertyRef Name="FK_IDEstado" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PolizaPorCliente_Poliza">
+    <End Role="Poliza" Type="Self.Poliza" Multiplicity="1" />
+    <End Role="PolizaPorCliente" Type="Self.PolizaPorCliente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Poliza">
+        <PropertyRef Name="ID_Poliza" />
+      </Principal>
+      <Dependent Role="PolizaPorCliente">
+        <PropertyRef Name="FK_IDPoliza" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="SistemaSegurosModelStoreContainer">
+    <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Cobertura" EntityType="Self.Cobertura" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CoberturaPorPoliza" EntityType="Self.CoberturaPorPoliza" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CoberturaPorPolizaCliente" EntityType="Self.CoberturaPorPolizaCliente" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EstadoPoliza" EntityType="Self.EstadoPoliza" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Poliza" EntityType="Self.Poliza" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PolizaPorCliente" EntityType="Self.PolizaPorCliente" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TipoRiesgo" EntityType="Self.TipoRiesgo" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_CoberturaPorPoliza_Cobertura" Association="Self.FK_CoberturaPorPoliza_Cobertura">
+      <End Role="Cobertura" EntitySet="Cobertura" />
+      <End Role="CoberturaPorPoliza" EntitySet="CoberturaPorPoliza" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CoberturaPorPoliza_Poliza" Association="Self.FK_CoberturaPorPoliza_Poliza">
+      <End Role="Poliza" EntitySet="Poliza" />
+      <End Role="CoberturaPorPoliza" EntitySet="CoberturaPorPoliza" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CoberturaPorPolizaCliente_Cobertura" Association="Self.FK_CoberturaPorPolizaCliente_Cobertura">
+      <End Role="Cobertura" EntitySet="Cobertura" />
+      <End Role="CoberturaPorPolizaCliente" EntitySet="CoberturaPorPolizaCliente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CoberturaPorPolizaCliente_PolizaPorCliente" Association="Self.FK_CoberturaPorPolizaCliente_PolizaPorCliente">
+      <End Role="PolizaPorCliente" EntitySet="PolizaPorCliente" />
+      <End Role="CoberturaPorPolizaCliente" EntitySet="CoberturaPorPolizaCliente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Poliza_TipoRiesgo" Association="Self.FK_Poliza_TipoRiesgo">
+      <End Role="TipoRiesgo" EntitySet="TipoRiesgo" />
+      <End Role="Poliza" EntitySet="Poliza" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PolizaPorCliente_Cliente" Association="Self.FK_PolizaPorCliente_Cliente">
+      <End Role="Cliente" EntitySet="Cliente" />
+      <End Role="PolizaPorCliente" EntitySet="PolizaPorCliente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PolizaPorCliente_EstadoPoliza" Association="Self.FK_PolizaPorCliente_EstadoPoliza">
+      <End Role="EstadoPoliza" EntitySet="EstadoPoliza" />
+      <End Role="PolizaPorCliente" EntitySet="PolizaPorCliente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PolizaPorCliente_Poliza" Association="Self.FK_PolizaPorCliente_Poliza">
+      <End Role="Poliza" EntitySet="Poliza" />
+      <End Role="PolizaPorCliente" EntitySet="PolizaPorCliente" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

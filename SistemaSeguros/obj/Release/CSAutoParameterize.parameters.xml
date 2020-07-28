@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="SistemaSegurosEntities-Web.config Connection String" description="SistemaSegurosEntities Connection String used in web.config by the application to access the database." defaultValue="metadata=res://*/SistemaSegurosModel.csdl|res://*/SistemaSegurosModel.ssdl|res://*/SistemaSegurosModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=(local);initial catalog=SistemaSeguros;persist security info=True;user id=UsuarioSistemaSeg;password=Prueba123;MultipleActiveResultSets=True;App=EntityFramework&quot;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Administrator\\source\\repos\\SistemaSegurosKen\\SistemaSeguros\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='SistemaSegurosEntities']/@connectionString" />
+  </parameter>
+</parameters>
